@@ -7,6 +7,7 @@ interface Order {
   gst: number;
   total: number;
   status: string;
+  points_spent: number;
   created_at: string;
 }
 
@@ -45,6 +46,7 @@ export default function Orders() {
                 <p style={{ fontSize: '10px', color: 'var(--px-muted)', margin: '0.25rem 0' }}>Subtotal: ${order.subtotal.toFixed(2)}</p>
                 <p style={{ fontSize: '10px', color: 'var(--px-muted)', margin: '0.25rem 0' }}>GST (10%): ${order.gst.toFixed(2)}</p>
                 <p style={{ fontSize: '14px' }}>Total: ${order.total.toFixed(2)}</p>
+                <p style={{ fontSize: '14px', color: 'var(--px-pink)', marginBottom: '0.5rem' }}>★ {order.points_spent} 點</p>
                 <span style={{ padding: '0.25rem 0.75rem', border: '2px solid var(--px-ink)', fontSize: '10px', background: statusColors[order.status], color: 'white' }}>
                   {order.status}
                 </span>

@@ -1,11 +1,13 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { usePoints } from '../context/PointsContext';
+import { useCart } from '../context/CartContext';
 import Poops from './Poops';
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const { balance } = usePoints();
+  const { count } = useCart();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -24,6 +26,7 @@ export default function Layout() {
           {user?.role === 'admin' && <Link to="/admin" style={{ color: 'white', textDecoration: 'none', fontSize: '12px', opacity: 0.9, transition: 'opacity 0.3s' }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.9'}>Admin</Link>}
         </div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <Link to="/cart" style={{ color: 'white', textDecoration: 'none', padding: '8px 0' }}>🛒 購物車 ({count})</Link>
           {user ? (
             <>
               {balance !== null && <span style={{ padding: '8px 0', color: 'var(--px-yellow)' }}>★ {balance} 點</span>}
