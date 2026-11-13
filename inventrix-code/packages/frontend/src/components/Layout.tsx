@@ -20,7 +20,7 @@ export default function Layout() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <nav style={{ background: 'var(--px-ink)', color: 'white', padding: '1.5rem 3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '4px solid var(--px-pink)' }}>
         <div style={{ display: 'flex', gap: '3rem', alignItems: 'center' }}>
-          <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '1.25rem' }}>✨ Inventrix</Link>
+          <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '1.25rem' }}>✨ Tamagotchi</Link>
           <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '12px', opacity: 0.9, transition: 'opacity 0.3s' }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.9'}>Store</Link>
           {user && <Link to="/orders" style={{ color: 'white', textDecoration: 'none', fontSize: '12px', opacity: 0.9, transition: 'opacity 0.3s' }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.9'}>My Orders</Link>}
           {user?.role === 'admin' && <Link to="/admin" style={{ color: 'white', textDecoration: 'none', fontSize: '12px', opacity: 0.9, transition: 'opacity 0.3s' }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.9'}>Admin</Link>}

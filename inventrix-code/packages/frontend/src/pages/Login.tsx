@@ -23,7 +23,7 @@ export default function Login() {
   return (
     <div style={{ maxWidth: '450px', margin: '4rem auto', padding: '3rem', background: 'var(--px-paper)', border: 'var(--px-border)', boxShadow: 'var(--px-shadow)' }}>
       <h1 style={{ marginBottom: '0.5rem', textAlign: 'center', fontSize: '1.25rem', color: 'var(--px-pink)' }}>Welcome Back</h1>
-      <p style={{ textAlign: 'center', color: 'var(--px-muted)', marginBottom: '2rem' }}>Login to your Inventrix account</p>
+      <p style={{ textAlign: 'center', color: 'var(--px-muted)', marginBottom: '2rem' }}>Login to your Tamagotchi account</p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />

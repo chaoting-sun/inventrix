@@ -22,7 +22,7 @@ export default function Register() {
 
   return (
     <div style={{ maxWidth: '450px', margin: '4rem auto', padding: '3rem', background: 'var(--px-paper)', border: 'var(--px-border)', boxShadow: 'var(--px-shadow)' }}>
-      <h1 style={{ marginBottom: '0.5rem', textAlign: 'center', fontSize: '1.25rem', color: 'var(--px-pink)' }}>Join Inventrix</h1>
+      <h1 style={{ marginBottom: '0.5rem', textAlign: 'center', fontSize: '1.25rem', color: 'var(--px-pink)' }}>Join Tamagotchi</h1>
       <p style={{ textAlign: 'center', color: 'var(--px-muted)', marginBottom: '2rem' }}>Create your account to get started</p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <input type="text" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} required />
