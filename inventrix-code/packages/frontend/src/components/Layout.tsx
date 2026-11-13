@@ -1,8 +1,10 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { usePoints } from '../context/PointsContext';
 
 export default function Layout() {
   const { user, logout } = useAuth();
+  const { balance } = usePoints();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,6 +24,7 @@ export default function Layout() {
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           {user ? (
             <>
+              {balance !== null && <span style={{ background: 'rgba(255,255,255,0.2)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem', fontWeight: 'bold' }}>★ {balance} 點</span>}
               <span style={{ background: 'rgba(255,255,255,0.2)', padding: '8px 16px', borderRadius: '20px', fontSize: '0.9rem' }}>👤 {user.name}</span>
               <button onClick={handleLogout} style={{ background: 'white', color: '#667eea', padding: '8px 20px', borderRadius: '20px' }}>Logout</button>
             </>
