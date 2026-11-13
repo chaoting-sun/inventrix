@@ -181,6 +181,7 @@ input:focus, select:focus, textarea:focus {
   width: 48px;
   height: 48px;
   padding: 0;
+  border: none;
   font-size: 36px;
   line-height: 1;
   background: none;
@@ -201,10 +202,10 @@ input:focus, select:focus, textarea:focus {
   position: fixed;
   z-index: 1000;
   pointer-events: none;
-  font-size: 20px;
-  font-weight: bold;
-  color: #ffd700;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  font-size: 14px;
+  white-space: nowrap;
+  color: var(--px-yellow);
+  text-shadow: 2px 2px 0 var(--px-ink);
   animation: poop-reward-float 1s ease-out forwards;
 }
 

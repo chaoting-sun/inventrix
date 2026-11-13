@@ -1,5 +1,5 @@
-// shortcut: mocks the points API in the browser until the backend serves /api/me/points and /api/points/earn; set to false then.
-const MOCK_POINTS_API = true;
+// Set to true to demo the points flow in the browser without the backend points API.
+const MOCK_POINTS_API = false;
 
 const EARN_AMOUNT = 10;
 const EARN_LIMIT = 3;
@@ -29,7 +29,3 @@ export function earnPoints(token: string): Promise<Response> {
   }
   return fetch('/api/points/earn', { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
 }
-
-// shortcut: falls back to the contract formula while the products API lacks point_price; drop once it ships.
-export const pointPrice = (product: { price: number; point_price?: number }) =>
-  product.point_price ?? Math.max(1, Math.ceil(product.price));
