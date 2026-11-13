@@ -10,6 +10,7 @@ import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminInventory from './pages/AdminInventory';
 import Layout from './components/Layout';
+import Handheld from './components/Handheld';
 
 const ProtectedRoute = ({ children, adminOnly = false }: { children: JSX.Element; adminOnly?: boolean }) => {
   const { user } = useAuth();
@@ -35,6 +36,7 @@ function App() {
             <Route path="admin/inventory" element={<ProtectedRoute adminOnly><AdminInventory /></ProtectedRoute>} />
           </Route>
         </Routes>
+        <Handheld />
       </BrowserRouter>
     </AuthProvider>
   );
