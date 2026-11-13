@@ -1,0 +1,42 @@
+{
+  "stage": "code-generation",
+  "upstream_ids": [
+    "FR1.1", "FR1.2", "FR1.3", "FR1.4",
+    "FR2.1", "FR2.2", "FR2.3", "FR2.4", "FR2.5",
+    "FR3.1",
+    "FR4.1", "FR4.2", "FR4.3", "FR4.4",
+    "FR5.1", "FR5.2", "FR5.3", "FR5.4", "FR5.5",
+    "FR6.1", "FR6.2", "FR6.3",
+    "NFR1", "NFR2", "NFR3", "NFR4", "NFR5", "NFR6"
+  ],
+  "coverage": [
+    { "id": "FR1.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR1.2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR1.3", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR1.4", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR2.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR2.2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR2.3", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR2.4", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR2.5", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR3.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR4.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR4.2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR4.3", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR4.4", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR5.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR5.2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR5.3", "status": "OK", "target": "inventrix-code/packages/api/src/__tests__/orders.validation.test.ts" },
+    { "id": "FR5.4", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR5.5", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR6.1", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR6.2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "FR6.3", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "NFR1", "status": "OK", "target": "inventrix-code/packages/api/src/db.ts" },
+    { "id": "NFR2", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "NFR3", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "NFR4", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "NFR5", "status": "Deferred", "target": "先做 issue #3" },
+    { "id": "NFR6", "status": "Deferred", "target": "先做 issue #3" }
+  ]
+}

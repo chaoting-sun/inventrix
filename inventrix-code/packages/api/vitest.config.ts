@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
-    env: { DB_PATH: ':memory:' }
+    // The PostgreSQL test files share one database, so they run one file at a time.
+    fileParallelism: false
   }
 });

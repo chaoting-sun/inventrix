@@ -1,8 +1,7 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initDb } from './db.js';
 import authRoutes from './routes/auth.js';
 import productsRoutes from './routes/products.js';
 import ordersRoutes from './routes/orders.js';
@@ -19,13 +18,17 @@ export const createApp = () => {
   app.use(express.json());
   app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
-  initDb();
-
   app.use('/api/auth', authRoutes);
   app.use('/api/products', productsRoutes);
   app.use('/api/orders', ordersRoutes);
   app.use('/api/analytics', analyticsRoutes);
   app.use('/api', pointsRoutes);
+
+  // Express identifies error middleware by its four-argument signature.
+  app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
+    console.error(`Request failed: ${req.method} ${req.originalUrl}`, err);
+    res.status(500).json({ error: 'Internal server error' });
+  });
 
   return app;
 };
