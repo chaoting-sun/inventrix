@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { PointsProvider } from './context/PointsContext';
+import { CartProvider } from './context/CartContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Storefront from './pages/Storefront';
 import ProductDetail from './pages/ProductDetail';
 import Orders from './pages/Orders';
+import Cart from './pages/Cart';
+import CheckoutSuccess from './pages/CheckoutSuccess';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
@@ -22,6 +25,7 @@ const ProtectedRoute = ({ children, adminOnly = false }: { children: JSX.Element
 function App() {
   return (
     <AuthProvider>
+      <CartProvider>
       <BrowserRouter>
         <PointsProvider>
         <Routes>
@@ -30,6 +34,8 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Storefront />} />
             <Route path="products/:id" element={<ProductDetail />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="checkout/success" element={<ProtectedRoute><CheckoutSuccess /></ProtectedRoute>} />
             <Route path="orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
             <Route path="admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
             <Route path="admin/products" element={<ProtectedRoute adminOnly><AdminProducts /></ProtectedRoute>} />
@@ -39,6 +45,7 @@ function App() {
         </Routes>
         </PointsProvider>
       </BrowserRouter>
+      </CartProvider>
     </AuthProvider>
   );
 }

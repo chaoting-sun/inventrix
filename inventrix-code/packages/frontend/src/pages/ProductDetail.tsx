@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useParams, Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { pointPrice } from '../points';
+import { mascot } from '../mascot';
 
 interface Product {
   id: number;
@@ -13,8 +15,7 @@ interface Product {
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const { user, token } = useAuth();
-  const navigate = useNavigate();
+  const { add } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState('');
@@ -25,33 +26,11 @@ export default function ProductDetail() {
       .then(setProduct);
   }, [id]);
 
-  const handleOrder = async () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
-    try {
-      const res = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          items: [{ product_id: product?.id, quantity }]
-        })
-      });
-
-      if (res.ok) {
-        setMessage('Order placed successfully!');
-        setTimeout(() => navigate('/orders'), 2000);
-      } else {
-        setMessage('Order failed');
-      }
-    } catch (err) {
-      setMessage('Order failed');
-    }
+  const handleAdd = () => {
+    if (!product) return;
+    add({ product_id: product.id, name: product.name, image_url: product.image_url, point_price: pointPrice(product), stock: product.stock, quantity });
+    mascot.happy();
+    setMessage('已加入購物車！');
   };
 
   if (!product) return <div>Loading...</div>;
@@ -68,13 +47,11 @@ export default function ProductDetail() {
             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
           </span>
         </div>
-        {product.stock > 0 && (
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <input type="number" min="1" max={product.stock} value={quantity} onChange={e => setQuantity(Number(e.target.value))} style={{ width: '100px' }} />
-            <button onClick={handleOrder} style={{ background: '#007bff', color: 'white', flex: 1 }}>Place Order</button>
-          </div>
-        )}
-        {message && <p style={{ marginTop: '1rem', color: message.includes('success') ? '#28a745' : '#dc3545' }}>{message}</p>}
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <input type="number" aria-label="數量" min="1" max={product.stock} value={quantity} disabled={product.stock <= 0} onChange={e => setQuantity(Math.max(1, Math.min(product.stock, Math.floor(Number(e.target.value)) || 1)))} style={{ width: '100px' }} />
+          <button onClick={handleAdd} disabled={product.stock <= 0} style={{ background: '#007bff', color: 'white', flex: 1 }}>{product.stock > 0 ? '加入購物車' : '已售完'}</button>
+        </div>
+        {message && <p style={{ marginTop: '1rem', color: '#28a745' }}>{message} <Link to="/cart" style={{ color: '#667eea', fontWeight: 600 }}>前往購物車</Link></p>}
       </div>
     </div>
   );
