@@ -61,6 +61,15 @@ pnpm build
 pnpm start
 ```
 
+### Docker
+
+```bash
+echo "JWT_SECRET=$(openssl rand -hex 32)" > .env
+docker compose up --build
+```
+
+- App: http://localhost:8080
+
 ### Deploying to AWS
 
 ```bash
