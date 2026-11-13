@@ -7,6 +7,7 @@ import { mascot } from '../mascot';
 interface PointsContextType {
   balance: number | null;
   earn: () => Promise<boolean>;
+  setBalance: (balance: number) => void;
 }
 
 const PointsContext = createContext<PointsContextType | undefined>(undefined);
@@ -44,7 +45,7 @@ export const PointsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <PointsContext.Provider value={{ balance, earn }}>
+    <PointsContext.Provider value={{ balance, earn, setBalance }}>
       {children}
     </PointsContext.Provider>
   );
