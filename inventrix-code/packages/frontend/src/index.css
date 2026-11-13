@@ -94,7 +94,7 @@ input:focus, select:focus, textarea:focus {
 
 .handheld-status {
   min-height: 2.6em;
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1.6;
   text-align: center;
   color: var(--px-lcd-ink);
