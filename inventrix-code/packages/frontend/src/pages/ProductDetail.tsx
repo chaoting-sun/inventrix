@@ -7,6 +7,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
+  point_price: number;
   stock: number;
   image_url: string;
 }
@@ -63,7 +64,7 @@ export default function ProductDetail() {
         <h1 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>{product.name}</h1>
         <p style={{ color: 'var(--px-muted)', marginBottom: '2rem' }}>{product.description}</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <span style={{ fontSize: '1.5rem', color: 'var(--px-pink)' }}>${product.price}</span>
+          <span style={{ fontSize: '1.5rem', color: 'var(--px-pink)' }}>★ {product.point_price} 點</span>
           <span style={{ fontSize: '1rem', color: product.stock > 0 ? 'var(--px-green)' : 'var(--px-red)' }}>
             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
           </span>

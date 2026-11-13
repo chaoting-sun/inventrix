@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { PointsProvider } from './context/PointsContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Storefront from './pages/Storefront';
@@ -23,6 +24,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <PointsProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -37,6 +39,7 @@ function App() {
           </Route>
         </Routes>
         <Handheld />
+        </PointsProvider>
       </BrowserRouter>
     </AuthProvider>
   );
