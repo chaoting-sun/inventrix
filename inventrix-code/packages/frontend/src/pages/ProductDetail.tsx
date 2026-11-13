@@ -60,23 +60,23 @@ export default function ProductDetail() {
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ background: 'white', borderRadius: '8px', padding: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '8px', marginBottom: '2rem' }} />
-        <h1 style={{ marginBottom: '1rem' }}>{product.name}</h1>
-        <p style={{ color: '#666', marginBottom: '2rem' }}>{product.description}</p>
+      <div style={{ background: 'var(--px-paper)', border: 'var(--px-border)', boxShadow: 'var(--px-shadow)', padding: '2rem' }}>
+        <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '400px', objectFit: 'cover', border: 'var(--px-border)', marginBottom: '2rem' }} />
+        <h1 style={{ marginBottom: '1rem', fontSize: '1.5rem' }}>{product.name}</h1>
+        <p style={{ color: 'var(--px-muted)', marginBottom: '2rem' }}>{product.description}</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#007bff' }}>★ {pointPrice(product)} 點</span>
-          <span style={{ fontSize: '1rem', color: product.stock > 0 ? '#28a745' : '#dc3545' }}>
+          <span style={{ fontSize: '1.5rem', color: 'var(--px-pink)' }}>★ {pointPrice(product)} 點</span>
+          <span style={{ fontSize: '1rem', color: product.stock > 0 ? 'var(--px-green)' : 'var(--px-red)' }}>
             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
           </span>
         </div>
         {product.stock > 0 && (
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
             <input type="number" min="1" max={product.stock} value={quantity} onChange={e => setQuantity(Number(e.target.value))} style={{ width: '100px' }} />
-            <button onClick={handleOrder} style={{ background: '#007bff', color: 'white', flex: 1 }}>Place Order</button>
+            <button onClick={handleOrder} style={{ flex: 1 }}>Place Order</button>
           </div>
         )}
-        {message && <p style={{ marginTop: '1rem', color: message.includes('success') ? '#28a745' : '#dc3545' }}>{message}</p>}
+        {message && <p style={{ marginTop: '1rem', color: message.includes('success') ? 'var(--px-green)' : 'var(--px-red)' }}>{message}</p>}
       </div>
     </div>
   );

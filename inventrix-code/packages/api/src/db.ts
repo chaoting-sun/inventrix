@@ -1,7 +1,12 @@
 import Database from 'better-sqlite3';
 import bcrypt from 'bcrypt';
 
-const db = new Database('inventrix.db');
+const db = new Database(process.env.DB_PATH || 'inventrix.db');
+
+const hasColumn = (table: string, column: string): boolean => {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+  return columns.some(c => c.name === column);
+};
 
 export const initDb = () => {
   db.exec(`
@@ -45,6 +50,14 @@ export const initDb = () => {
       FOREIGN KEY (product_id) REFERENCES products(id)
     );
   `);
+
+  // 既有資料庫的遷移：點數欄位起始值皆為 0
+  if (!hasColumn('users', 'points')) {
+    db.exec('ALTER TABLE users ADD COLUMN points INTEGER NOT NULL DEFAULT 0');
+  }
+  if (!hasColumn('orders', 'points_spent')) {
+    db.exec('ALTER TABLE orders ADD COLUMN points_spent INTEGER NOT NULL DEFAULT 0');
+  }
 
   const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get() as { count: number };
   

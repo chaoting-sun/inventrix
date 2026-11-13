@@ -3,20 +3,21 @@ import db from '../db.js';
 import { authenticate, requireAdmin, AuthRequest } from '../middleware/auth.js';
 import { generateProductImage } from '../services/imageGenerator.js';
 import { protectedRouteRateLimit } from '../middleware/rateLimit.js';
+import { withPointPrice } from '../services/points.js';
 
 const router = Router();
 
 router.get('/', (req, res) => {
-  const products = db.prepare('SELECT * FROM products ORDER BY created_at DESC').all();
-  res.json(products);
+  const products = db.prepare('SELECT * FROM products ORDER BY created_at DESC').all() as { price: number }[];
+  res.json(products.map(withPointPrice));
 });
 
 router.get('/:id', (req, res) => {
-  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id);
+  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(req.params.id) as { price: number } | undefined;
   if (!product) {
     return res.status(404).json({ error: 'Product not found' });
   }
-  res.json(product);
+  res.json(withPointPrice(product));
 });
 
 router.post('/', protectedRouteRateLimit, authenticate, requireAdmin, (req: AuthRequest, res) => {
