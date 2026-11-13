@@ -15,7 +15,7 @@ A full-stack e-commerce platform with inventory management, order processing, an
 
 - **Frontend**: Vite + React + TypeScript
 - **Backend**: Node.js + Express + TypeScript
-- **Database**: SQLite
+- **Database**: PostgreSQL 17
 
 ## Getting Started
 
@@ -23,12 +23,34 @@ A full-stack e-commerce platform with inventory management, order processing, an
 
 - Node.js 22
 - pnpm
+- Docker (or Podman) for a local PostgreSQL
 - AWS credentials configured
 
 ### Installation
 
 ```bash
 pnpm install
+```
+
+### Database
+
+The API reads its PostgreSQL connection string from the `DATABASE_URL` environment variable only. It does not start without it.
+
+The `db` service in `docker-compose.yml` does not publish a port. To run the API or the tests on your machine, start a separate local PostgreSQL:
+
+```bash
+docker run -d --name inventrix-db -p 5432:5432 \
+  -e POSTGRES_USER=inventrix -e POSTGRES_PASSWORD=inventrix -e POSTGRES_DB=inventrix \
+  postgres:17-alpine
+export DATABASE_URL=postgres://inventrix:inventrix@localhost:5432/inventrix
+```
+
+On startup the API creates the tables, adds missing columns to an existing database, and seeds the default users and products when the `users` table is empty.
+
+To remove the local database and its data:
+
+```bash
+docker rm -f inventrix-db
 ```
 
 ### AWS Configuration
@@ -47,12 +69,24 @@ aws configure
 
 ### Development
 
+Start the local PostgreSQL and set `DATABASE_URL` first (see [Database](#database)).
+
 ```bash
 pnpm dev
 ```
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
+
+### Tests
+
+```bash
+# Unit tests only. The PostgreSQL tests are skipped.
+pnpm --filter api test
+
+# Also runs the PostgreSQL tests. They add rows, so use a throwaway database.
+DATABASE_URL=postgres://inventrix:inventrix@localhost:5432/inventrix pnpm --filter api test
+```
 
 ### Production Build
 
