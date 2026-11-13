@@ -2,6 +2,7 @@ import { Router } from 'express';
 import db from '../db.js';
 import { authenticate, requireAdmin, AuthRequest } from '../middleware/auth.js';
 import { protectedRouteRateLimit } from '../middleware/rateLimit.js';
+import { toPointPrice } from '../services/points.js';
 
 const router = Router();
 
@@ -46,38 +47,100 @@ router.get('/:id', protectedRouteRateLimit, authenticate, (req: AuthRequest, res
   res.json({ ...order, items });
 });
 
-router.post('/', protectedRouteRateLimit, authenticate, (req: AuthRequest, res) => {
-  const { items } = req.body;
+class OrderError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+  }
+}
 
-  let subtotal = 0;
-  const productUpdates: any[] = [];
+const isPositiveInt = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v) && v > 0;
 
+/** 驗證並合併相同商品的項目，避免以重複列繞過庫存檢查。 */
+const parseItems = (body: any): Map<number, number> => {
+  const items = body?.items;
+  if (!Array.isArray(items) || items.length === 0) {
+    throw new OrderError(400, 'items must be a non-empty array');
+  }
+  const merged = new Map<number, number>();
   for (const item of items) {
-    const product = db.prepare('SELECT * FROM products WHERE id = ?').get(item.product_id) as any;
-    if (!product || product.stock < item.quantity) {
-      return res.status(400).json({ error: `Insufficient stock for product ${item.product_id}` });
+    if (!isPositiveInt(item?.product_id) || !isPositiveInt(item?.quantity)) {
+      throw new OrderError(400, 'product_id and quantity must be positive integers');
     }
-    subtotal += product.price * item.quantity;
-    productUpdates.push({ id: item.product_id, quantity: item.quantity, price: product.price });
+    merged.set(item.product_id, (merged.get(item.product_id) ?? 0) + item.quantity);
+  }
+  return merged;
+};
+
+// 結帳：單一交易內檢查庫存與點數，扣庫存、扣點、建立訂單。任何錯誤都會整筆回滾。
+const checkout = db.transaction((userId: number, lines: Map<number, number>) => {
+  let subtotal = 0;
+  let pointsSpent = 0;
+  const priced: { id: number; quantity: number; price: number }[] = [];
+
+  for (const [productId, quantity] of lines) {
+    const product = db.prepare('SELECT id, price, stock FROM products WHERE id = ?').get(productId) as
+      | { id: number; price: number; stock: number }
+      | undefined;
+    if (!product) {
+      throw new OrderError(400, `Unknown product ${productId}`);
+    }
+    if (product.stock < quantity) {
+      throw new OrderError(409, `Insufficient stock for product ${productId}`);
+    }
+    subtotal += product.price * quantity;
+    pointsSpent += toPointPrice(product.price) * quantity;
+    priced.push({ id: productId, quantity, price: product.price });
+  }
+
+  const user = db.prepare('SELECT points FROM users WHERE id = ?').get(userId) as { points: number } | undefined;
+  if (!user) {
+    throw new OrderError(401, 'Invalid token');
+  }
+  if (user.points < pointsSpent) {
+    throw new OrderError(402, 'Insufficient points');
   }
 
   const gst = subtotal * 0.1;
   const total = subtotal + gst;
 
-  const orderResult = db.prepare('INSERT INTO orders (user_id, subtotal, gst, total, status) VALUES (?, ?, ?, ?, ?)').run(
-    req.user?.id, subtotal, gst, total, 'pending'
-  );
+  const orderId = db.prepare(
+    'INSERT INTO orders (user_id, subtotal, gst, total, status, points_spent) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(userId, subtotal, gst, total, 'pending', pointsSpent).lastInsertRowid;
 
-  const orderId = orderResult.lastInsertRowid;
-
-  for (const update of productUpdates) {
+  for (const line of priced) {
     db.prepare('INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)').run(
-      orderId, update.id, update.quantity, update.price
+      orderId, line.id, line.quantity, line.price
     );
-    db.prepare('UPDATE products SET stock = stock - ? WHERE id = ?').run(update.quantity, update.id);
+    const updated = db.prepare('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?').run(
+      line.quantity, line.id, line.quantity
+    );
+    if (updated.changes !== 1) {
+      throw new OrderError(409, `Insufficient stock for product ${line.id}`);
+    }
   }
 
-  res.status(201).json({ id: orderId, subtotal, gst, total, status: 'pending' });
+  const charged = db.prepare('UPDATE users SET points = points - ? WHERE id = ? AND points >= ?').run(
+    pointsSpent, userId, pointsSpent
+  );
+  if (charged.changes !== 1) {
+    throw new OrderError(402, 'Insufficient points');
+  }
+
+  const balance = (db.prepare('SELECT points FROM users WHERE id = ?').get(userId) as { points: number }).points;
+  return { id: Number(orderId), points_spent: pointsSpent, balance };
+});
+
+router.post('/', protectedRouteRateLimit, authenticate, (req: AuthRequest, res) => {
+  try {
+    const lines = parseItems(req.body);
+    res.status(201).json(checkout(req.user!.id, lines));
+  } catch (error) {
+    if (error instanceof OrderError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    console.error('Checkout failed', error);
+    res.status(500).json({ error: 'Checkout failed' });
+  }
 });
 
 router.patch('/:id/status', protectedRouteRateLimit, authenticate, requireAdmin, (req: AuthRequest, res) => {
