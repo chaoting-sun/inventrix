@@ -47,7 +47,7 @@ export default function Orders() {
                 <p style={{ fontSize: '0.9rem', color: '#666', margin: '0.25rem 0' }}>Subtotal: ${order.subtotal.toFixed(2)}</p>
                 <p style={{ fontSize: '0.9rem', color: '#666', margin: '0.25rem 0' }}>GST (10%): ${order.gst.toFixed(2)}</p>
                 <p style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Total: ${order.total.toFixed(2)}</p>
-                {orderPoints(order) !== undefined && <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#667eea' }}>★ {orderPoints(order)} 點</p>}
+                {orderPoints(order) !== undefined && <p style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#667eea', marginBottom: '0.5rem' }}>★ {orderPoints(order)} 點</p>}
                 <span style={{ padding: '0.25rem 0.75rem', borderRadius: '4px', fontSize: '0.9rem', background: statusColors[order.status], color: 'white' }}>
                   {order.status}
                 </span>

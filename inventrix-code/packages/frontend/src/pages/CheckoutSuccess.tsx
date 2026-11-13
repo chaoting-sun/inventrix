@@ -13,7 +13,7 @@ const danceStyle = `
   0%, 100% { transform: translateY(0) rotate(-8deg); }
   50% { transform: translateY(-12px) rotate(8deg); }
 }
-.checkout-dancer { display: inline-block; animation: checkout-dance 0.6s ease-in-out infinite; }
+.checkout-dancer { display: inline-block; margin: 0 0.75rem; animation: checkout-dance 0.6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .checkout-dancer { animation: none; } }
 `;
 
