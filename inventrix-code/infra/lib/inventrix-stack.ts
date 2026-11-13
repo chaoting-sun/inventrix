@@ -5,6 +5,8 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as ecs from 'aws-cdk-lib/aws-ecs';
 import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager';
 import { Platform } from 'aws-cdk-lib/aws-ecr-assets';
@@ -38,6 +40,7 @@ export class InventrixStack extends Stack {
       storageEncrypted: true,
       databaseName: DB_NAME,
       credentials: rds.Credentials.fromGeneratedSecret('inventrix'),
+      // shortcut: deleting the stack drops the database; switch to SNAPSHOT before it holds real data.
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
@@ -93,6 +96,19 @@ export class InventrixStack extends Stack {
 
     db.connections.allowDefaultPortFrom(service.service);
 
-    new CfnOutput(this, 'Url', { value: `http://${service.loadBalancer.loadBalancerDnsName}` });
+    // CloudFront supplies HTTPS on its default domain, so logins never cross the internet in plain HTTP.
+    const cdn = new cloudfront.Distribution(this, 'Cdn', {
+      defaultBehavior: {
+        origin: new origins.LoadBalancerV2Origin(service.loadBalancer, {
+          protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+        }),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+        originRequestPolicy: cloudfront.OriginRequestPolicy.ALL_VIEWER,
+      },
+    });
+
+    new CfnOutput(this, 'Url', { value: `https://${cdn.distributionDomainName}` });
   }
 }

@@ -72,7 +72,7 @@ docker compose up --build
 
 ### Deploying to AWS (ECS Fargate + RDS, us-east-1)
 
-The CDK app in `infra/` defines one Fargate service (nginx + API), an ALB, RDS for PostgreSQL (single AZ), and Secrets Manager secrets for the database and `JWT_SECRET`.
+The CDK app in `infra/` defines one Fargate service (nginx + API) behind an ALB and CloudFront (HTTPS), RDS for PostgreSQL (single AZ), and Secrets Manager secrets for the database and `JWT_SECRET`.
 
 ```bash
 cd infra
