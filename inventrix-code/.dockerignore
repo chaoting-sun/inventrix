@@ -1,0 +1,8 @@
+**/node_modules
+**/dist
+**/*.pem
+**/*.db
+**/setup_info.txt
+**/.env
+infra
+.git

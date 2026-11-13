@@ -61,7 +61,28 @@ pnpm build
 pnpm start
 ```
 
-### Deploying to AWS
+### Docker
+
+```bash
+echo "JWT_SECRET=$(openssl rand -hex 32)" > .env
+docker compose up --build
+```
+
+- App: http://localhost:8080
+
+### Deploying to AWS (ECS Fargate + RDS, us-east-1)
+
+The CDK app in `infra/` defines one Fargate service (nginx + API) behind an ALB and CloudFront (HTTPS), RDS for PostgreSQL (single AZ), and Secrets Manager secrets for the database and `JWT_SECRET`.
+
+```bash
+cd infra
+pnpm install
+pnpm cdk synth
+pnpm cdk bootstrap   # once per account/region
+pnpm cdk deploy      # prints the app URL
+```
+
+### Deploying to AWS (legacy EC2 script)
 
 ```bash
 chmod +x deploy.sh
