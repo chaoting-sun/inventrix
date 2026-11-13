@@ -20,17 +20,17 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: '450px', margin: '4rem auto', padding: '3rem', background: 'white', borderRadius: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
-      <h1 style={{ marginBottom: '0.5rem', textAlign: 'center', fontSize: '2rem', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Welcome Back</h1>
-      <p style={{ textAlign: 'center', color: '#666', marginBottom: '2rem' }}>Login to your Inventrix account</p>
+    <div style={{ maxWidth: '450px', margin: '4rem auto', padding: '3rem', background: 'var(--px-paper)', border: 'var(--px-border)', boxShadow: 'var(--px-shadow)' }}>
+      <h1 style={{ marginBottom: '0.5rem', textAlign: 'center', fontSize: '1.25rem', color: 'var(--px-pink)' }}>Welcome Back</h1>
+      <p style={{ textAlign: 'center', color: 'var(--px-muted)', marginBottom: '2rem' }}>Login to your Inventrix account</p>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
         <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-        {error && <p style={{ color: '#dc3545', textAlign: 'center', fontSize: '0.9rem' }}>❌ {error}</p>}
-        <button type="submit" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', padding: '14px', fontSize: '1rem' }}>Login</button>
+        {error && <p style={{ color: 'var(--px-red)', textAlign: 'center', fontSize: '0.9rem' }}>❌ {error}</p>}
+        <button type="submit" style={{ padding: '14px' }}>Login</button>
       </form>
-      <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#666' }}>
-        Don't have an account? <Link to="/register" style={{ color: '#667eea', fontWeight: '600', textDecoration: 'none' }}>Register</Link>
+      <p style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--px-muted)' }}>
+        Don't have an account? <Link to="/register" style={{ color: 'var(--px-pink)' }}>Register</Link>
       </p>
     </div>
   );
