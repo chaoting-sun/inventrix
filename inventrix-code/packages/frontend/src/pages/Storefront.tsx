@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { pointPrice } from '../points';
 
 interface Product {
   id: number;
   name: string;
   description: string;
   price: number;
+  point_price?: number;
   stock: number;
   image_url: string;
 }
@@ -33,7 +35,7 @@ export default function Storefront() {
                 <h3 style={{ marginBottom: '0.5rem', fontSize: '1.25rem', fontWeight: '600' }}>{product.name}</h3>
                 <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '1rem', lineHeight: '1.5' }}>{product.description}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>${product.price}</span>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>★ {pointPrice(product)} 點</span>
                   <span style={{ padding: '4px 12px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: '600', background: product.stock > 0 ? '#d4edda' : '#f8d7da', color: product.stock > 0 ? '#155724' : '#721c24' }}>
                     {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
                   </span>

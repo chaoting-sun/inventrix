@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { pointPrice } from '../points';
 
 interface Product {
   id: number;
   name: string;
   description: string;
   price: number;
+  point_price?: number;
   stock: number;
   image_url: string;
 }
@@ -63,7 +65,7 @@ export default function ProductDetail() {
         <h1 style={{ marginBottom: '1rem' }}>{product.name}</h1>
         <p style={{ color: '#666', marginBottom: '2rem' }}>{product.description}</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#007bff' }}>${product.price}</span>
+          <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#007bff' }}>★ {pointPrice(product)} 點</span>
           <span style={{ fontSize: '1rem', color: product.stock > 0 ? '#28a745' : '#dc3545' }}>
             {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
           </span>
