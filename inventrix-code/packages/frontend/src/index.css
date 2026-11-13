@@ -186,6 +186,13 @@ input:focus, select:focus, textarea:focus {
   line-height: 1;
   background: none;
   box-shadow: none;
+  animation: poop-fall 0.8s ease-in;
+}
+
+@keyframes poop-fall {
+  from {
+    transform: translateY(var(--poop-fall-from));
+  }
 }
 
 .poop:hover:not(:disabled) {
@@ -219,6 +226,7 @@ input:focus, select:focus, textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   .poop {
     transition: none;
+    animation: none;
   }
 
   .poop-reward {

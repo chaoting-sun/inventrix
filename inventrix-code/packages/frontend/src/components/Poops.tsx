@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, CSSProperties } from 'react';
 import { usePoints } from '../context/PointsContext';
 import { mascot } from '../mascot';
 
-const SPAWN_INTERVAL_MS = 10_000;
-const MAX_POOPS = 3;
+const SPAWN_INTERVAL_MS = 6_000;
+const MAX_POOPS = 5;
 const POOP_SIZE = 48;
 const HEADER_HEIGHT = 100;
 // Bottom-right corner kept clear for the handheld mascot.
@@ -52,7 +52,7 @@ export default function Poops() {
   return (
     <>
       {poops.map(poop => (
-        <button key={poop.id} className="poop" aria-label="清掉便便，加 10 點" onClick={() => clean(poop)} style={{ top: poop.top, left: poop.left }}>💩</button>
+        <button key={poop.id} className="poop" aria-label="清掉便便，加 10 點" onClick={() => clean(poop)} style={{ top: poop.top, left: poop.left, '--poop-fall-from': `${HEADER_HEIGHT - poop.top}px` } as CSSProperties}>💩</button>
       ))}
       <div aria-live="polite">
         {rewards.map(reward => (
