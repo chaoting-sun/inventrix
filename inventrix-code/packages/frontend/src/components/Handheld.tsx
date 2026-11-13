@@ -5,27 +5,14 @@ import { isMuted, playBeep, setMuted } from '../sound';
 const PIXEL = 6;
 const COLORS: Record<string, string> = { x: 'var(--px-lcd-ink)', f: 'var(--px-lcd-light)', e: 'var(--px-lcd-ink)', m: 'var(--px-pink)' };
 
-const EYES: Record<MascotMood, string> = {
-  idle: 'xffeffeffx',
-  happy: 'xffeffeffx',
-  dance: 'xffeffeffx',
-  hungry: 'xfeeffeefx',
-};
-const MOUTH: Record<MascotMood, string> = {
-  idle: 'xfffmmfffx',
-  happy: 'xffmmmmffx',
-  dance: 'xffmmmmffx',
-  hungry: 'xfffmmfffx',
-};
-
 function sprite(mood: MascotMood) {
   return [
     '...xxxx...',
     '.xxffffxx.',
     'xffffffffx',
-    EYES[mood],
+    mood === 'hungry' ? 'xfeeffeefx' : 'xffeffeffx',
     'xffffffffx',
-    MOUTH[mood],
+    mood === 'happy' || mood === 'dance' ? 'xffmmmmffx' : 'xfffmmfffx',
     '.xffffffx.',
     '..xxxxxx..',
     '..x....x..',
@@ -37,8 +24,13 @@ const LABEL: Record<MascotMood, string> = { idle: '嗨！', happy: '開心！', 
 export default function Handheld() {
   const [state, setState] = useState<MascotState>({ mood: 'idle', message: null });
   const [muted, setMutedState] = useState(isMuted);
+  // Remounting the sprite on every update restarts its animation when happy() fires again mid-animation.
+  const [beat, setBeat] = useState(0);
 
-  useEffect(() => mascot.subscribe(setState), []);
+  useEffect(() => mascot.subscribe(s => {
+    setState(s);
+    setBeat(b => b + 1);
+  }), []);
 
   const toggleSound = () => {
     setMuted(!muted);
@@ -52,7 +44,7 @@ export default function Handheld() {
   return (
     <aside className="handheld" aria-label="電子雞掌機">
       <div className="handheld-screen">
-        <div className={`mascot mascot-${state.mood}`}>
+        <div key={beat} className={`mascot mascot-${state.mood}`}>
           <svg width={10 * PIXEL} height={rows.length * PIXEL} viewBox={`0 0 10 ${rows.length}`} shapeRendering="crispEdges" aria-hidden="true">
             {rows.flatMap((row, y) => [...row].map((c, x) => COLORS[c] && <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill={COLORS[c]} />))}
           </svg>
