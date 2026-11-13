@@ -108,13 +108,7 @@ docker compose up --build
 
 The CDK app in `infra/` defines one Fargate service (nginx + API) behind an ALB and CloudFront (HTTPS), RDS for PostgreSQL (single AZ), and Secrets Manager secrets for the database and `JWT_SECRET`.
 
-```bash
-cd infra
-pnpm install
-pnpm cdk synth
-pnpm cdk bootstrap   # once per account/region
-pnpm cdk deploy      # prints the app URL
-```
+See [infra/README.md](infra/README.md) for prerequisites, deploy, smoke test and rollback.
 
 ### Deploying to AWS (legacy EC2 script)
 
