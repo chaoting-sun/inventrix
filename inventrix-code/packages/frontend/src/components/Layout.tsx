@@ -1,11 +1,13 @@
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { usePoints } from '../context/PointsContext';
+import Poops from './Poops';
 
 export default function Layout() {
   const { user, logout } = useAuth();
   const { balance } = usePoints();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleLogout = () => {
     logout();
@@ -39,6 +41,7 @@ export default function Layout() {
       <main style={{ flex: 1, padding: '3rem', maxWidth: '1400px', width: '100%', margin: '0 auto' }}>
         <Outlet />
       </main>
+      {user && !pathname.startsWith('/admin') && <Poops />}
     </div>
   );
 }
